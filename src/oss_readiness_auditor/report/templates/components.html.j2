@@ -1,0 +1,45 @@
+{# SPDX-FileCopyrightText: 2026 DB InfraGO AG #}
+{# SPDX-License-Identifier: Apache-2.0 #}
+{# oss-readiness-auditor: rule source #}
+{# Hotspots: the units (bundles, modules) with findings in blocker checks, ranked; optional move-out scenario. #}
+{% set units, scen = comp.units, comp.scen %}
+{% macro names(uids) %}{% for u in uids %}{{ ", " if not loop.first }}<code>{{ units[u].name }}</code>{% else %}none{% endfor %}{% endmacro %}
+<section class="s" id="hotspots"><h2>Hotspots</h2>
+<p class="intro">Where to start: the units (bundles and modules) with findings in blocker checks, ranked by those findings, then by how many of the {{ comp.n_units|num }} units depend on them (through {{ comp.edges|num }} internal dependencies). Every finding is counted against the unit that contains its file; third-party jars in a built product count against the project bundle that embeds them.
+{%- if comp.pervasive %} Checks that hit more than half of all units are left out of the ranking: {{ comp.pervasive }}.{% endif %}</p>
+{% if comp.hot %}
+<div class="legend">
+{% for c in comp.legend %}<a class="chip st-{{ c.status }}" href="#c-{{ c.id }}">{{ icon(c.icon) }}{{ c.title }}</a>
+{% endfor %}
+</div>
+<div class="tbl"><table><thead><tr><th>Unit</th><th class="num">Findings in blocker checks</th><th class="num">Used by (transitive)</th><th>All findings by check</th></tr></thead><tbody>
+{% for u in comp.hot %}
+<tr><td><b>{{ u.name }}</b>{% if u.test %} <span class="kind">test</span>{% endif %}<br><span class="npath">{{ u.path }}</span></td><td class="num">{{ comp.ranked(u.own_b)|num }}</td><td class="num">{{ u.used_by_transitive|num }}</td><td>{{ m.chips(u.own, checks) }}</td></tr>
+{% endfor %}
+</tbody></table>
+{% if comp.n_hot > comp.hot|length %}<div class="note">The {{ comp.hot|length }} highest-ranked of {{ comp.n_hot|num }} units with findings in blocker checks; the checks in Details list every finding.</div>{% endif %}
+</div>
+{% else %}
+<p class="dl">No unit has findings in blocker checks.</p>
+{% endif %}
+{% if scen %}
+<h3 class="sub3">Scenario: moving units out</h3><p class="intro">Patterns <code>{{ scen.patterns|join(", ") }}</code> select {{ scen.excluded|length }} units, e.g. for an add-on that is not published. What remains must still build.</p>
+<div class="scen">
+<div><div class="n">{{ scen.broken|length }}</div><div class="l">remaining units depend on them directly (must change)</div></div>
+<div><div class="n">{{ scen.affected|length }}</div><div class="l">further units depend on those (rebuild/retest)</div></div>
+<div><div class="n">{{ scen.tests|length }}</div><div class="l">test units affected</div></div>
+<div><div class="n">{{ scen.features_to_split|length }}</div><div class="l">features mixing moved and kept units</div></div>
+</div>
+<p class="dl"><b>Moved out:</b> {{ names(scen.excluded) }}</p>
+<p class="dl"><b>Findings that leave with them:</b> {% if scen.findings_removed %}{{ m.chips(scen.findings_removed, checks) }}{% else %}none{% endif %}</p>
+{% if scen.broken %}
+<div class="tbl"><table><thead><tr><th>Remaining unit that must change</th><th>Depends on (moved)</th></tr></thead><tbody>
+{% for u, xs in scen.broken.items() %}<tr><td><code>{{ units[u].name }}</code></td><td>{{ names(xs) }}</td></tr>
+{% endfor %}
+</tbody></table></div>
+{% endif %}
+{% for fid, xs in scen.features_to_split.items() %}
+<p class="dl"><b>Feature {{ fid }}</b> also packages {{ names(xs) }}</p>
+{% endfor %}
+{% endif %}
+</section>

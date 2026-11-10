@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 DB InfraGO AG
+# SPDX-License-Identifier: Apache-2.0
+# oss-readiness-auditor: rule source
+#
+# Rule pack 'openrail': criteria of the OpenRail Association for hosted projects
+# (https://projects.openrailassociation.org/docs/incubation/process/). Enables the check "OpenRail project
+# criteria" and makes the community files of stage 1 required. For stage 2, set checks.openrail.target_stage = 2.
+
+about = 'OpenRail Association project criteria (stage 1 Onboarded, stage 2 Qualified): adds the OpenRail check and makes the stage 1 community files required.'
+default = false
+
+public_hosts = [
+    'openrailassociation.org',
+]
+
+[checks.project-basics]
+required = ['LICENSE', 'README', 'CODE_OF_CONDUCT', 'MAINTAINERS']

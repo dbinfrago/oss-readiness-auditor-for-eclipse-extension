@@ -1,0 +1,123 @@
+# SPDX-FileCopyrightText: 2026 DB InfraGO AG
+# SPDX-License-Identifier: Apache-2.0
+# oss-readiness-auditor: rule source
+#
+# Rule pack 'core'.
+# Standards bodies, open-source foundations and forges, package registries, large vendors' documentation and schema
+# hosts, and domains reserved for examples are public by nature.
+
+about = 'Generic open-source hygiene: licenses, credentials, hosts, personal data, project files.'
+default = true
+locked = true  # cannot be disabled
+
+# Public domains: hosts under them are not reported.
+public_hosts = [
+    'w3.org',
+    'omg.org',
+    'ietf.org',
+    'iana.org',
+    'unicode.org',
+    'ecma-international.org',
+    'oasis-open.org',
+    'xml.org',
+    'xmlsoap.org',
+    'json-schema.org',
+    'schema.org',
+    'purl.org',
+    'dublincore.org',
+    'openxmlformats.org',
+    'xmlns.com',
+    'apache.org',
+    'mozilla.org',
+    'gnu.org',
+    'opensource.org',
+    'creativecommons.org',
+    'spdx.org',
+    'reuse.software',
+    'python.org',
+    'nodejs.org',
+    'npmjs.org',
+    'npmjs.com',
+    'pypi.org',
+    'pythonhosted.org',
+    'maven.org',
+    'mvnrepository.com',
+    'sonatype.org',
+    'gradle.org',
+    'github.com',
+    'github.io',
+    'githubusercontent.com',
+    'gitlab.com',
+    'bitbucket.org',
+    'sourceforge.net',
+    'oracle.com',
+    'java.com',
+    'java.net',
+    'sun.com',
+    'jcp.org',
+    'openjdk.org',
+    'openjfx.io',
+    'microsoft.com',
+    'apple.com',
+    'google.com',
+    'googleapis.com',
+    'android.com',
+    'wikipedia.org',
+    'docker.com',
+    'docker.io',
+    'postgresql.org',
+    'mysql.com',
+    'sqlite.org',
+    'junit.org',
+    'slf4j.org',
+    'qos.ch',
+    'fasterxml.com',
+    'springframework.org',
+    'spring.io',
+    'jboss.org',
+    'hibernate.org',
+    'plantuml.com',
+    'graphviz.org',
+    'reactjs.org',
+    'react.dev',
+    'nextjs.org',
+    'vercel.com',
+    'typescriptlang.org',
+    'jquery.com',
+    'example.com',
+    'example.org',
+    'example.net',
+    'schemas.microsoft.com',
+    'schemas.android.com',
+]
+
+# Host-name parts that make a host 'internal-looking'.
+internal_host_hints = [
+    'gitlab',
+    'gitea',
+    'idp',
+    'sso',
+    'intranet',
+    'internal',
+    'corp',
+    'vpn',
+    'ldap',
+    'local',
+    'dev',
+    'uat',
+    'staging',
+    'preprod',
+    'lan',
+    'priv',
+]
+
+# Name roots that belong to a foundation: bundles and packages under them claim the foundation's namespace (and
+# often its trademark). Projects hosted there confirm it with project.hosted_by.
+[foundations]
+"org.eclipse" = 'Eclipse Foundation'
+"org.polarsys" = 'Eclipse Foundation (PolarSys)'
+"org.osgi" = 'OSGi Working Group (Eclipse Foundation)'
+"jakarta" = 'Eclipse Foundation (Jakarta EE)'
+"org.apache" = 'Apache Software Foundation'
+"org.ow2" = 'OW2'
+"org.jenkins-ci" = 'Jenkins project (Continuous Delivery Foundation)'

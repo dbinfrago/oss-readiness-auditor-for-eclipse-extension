@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: 2026 DB InfraGO AG
+# SPDX-License-Identifier: Apache-2.0
+# oss-readiness-auditor: rule source
+#
+# Rule pack 'lang-de'.
+
+about = 'German wording of proprietary, ownership and confidentiality notices.'
+default = true
+
+# Proprietary license clauses (regular expressions, case-insensitive; group 'holder' = owner).
+proprietary = [
+    '\b(?:ist|sind|bleibt|bleiben)\s+(?:das\s+)?(?:alleinige\s+|ausschlie(?:ß|ss)liche\s+)?(?:geistige\s+)?Eigentum\s+(?:der|des|von)\s+(?P<holder>(?-i:[A-Z\u00C0-\u00DE0-9])[^,.;:()\n]{1,59}?)\s*[,.;:(]',
+    '\bunerlaubte\s+(?:Vervielf[äa]ltigung|Weitergabe|Nutzung)\b',
+]
+
+# 'All rights reserved' wording; reported only when the header grants no license.
+all_rights = '\balle\s+Rechte\s+vorbehalten\b'
+
+# Ownership and confidentiality wording.
+ownership = [
+    '\bvertraulich\b',
+    'nur\s+f[üu]r\s+den\s+internen',
+    '\bstreng\s+geheim\b',
+]

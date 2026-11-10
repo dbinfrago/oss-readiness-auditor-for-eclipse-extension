@@ -1,0 +1,16 @@
+{# SPDX-FileCopyrightText: 2026 DB InfraGO AG #}
+{# SPDX-License-Identifier: Apache-2.0 #}
+{# oss-readiness-auditor: rule source #}
+<section class="hero"><p class="kicker">{{ icon("search") }} Independent open-source readiness audit</p>
+<h1>What stands between {{ repo_name }} and open source</h1>
+<p class="sub">{{ count.blocker }} {{ "check finds a blocker" if count.blocker == 1 else "checks find blockers" }} – {{ count.judgement }} need a human judgement.</p>
+<p class="lead">Generated offline from the repository itself: every number below comes from a documented rule that you can read in the <a href="#method">Method</a> section and re-run yourself. No network access, no AI. Secrets and personal data are masked.</p>
+<p class="meta">{{ run.repository }}
+{%- if run.git %} · commit <code>{{ run.git.head[:12] }}</code>
+{%- if run.git.modified_tracked_files %} (+{{ run.git.modified_tracked_files }} modified files){% endif %}
+{%- endif %} · {{ run.files_scanned|num }} files · {{ run.time_utc }}</p>
+<div class="counters">
+{% for s in STATUS_META if s != "info" or count[s] %}
+<div class="counter st-{{ s }}"><span class="tile">{{ icon(STATUS_META[s][1]) }}</span><div><div class="n">{{ count[s] }}</div><div class="l">{{ STATUS_META[s][0] }}</div></div></div>
+{% endfor %}
+</div></section>

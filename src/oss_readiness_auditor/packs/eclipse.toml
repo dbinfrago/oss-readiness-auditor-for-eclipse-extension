@@ -1,0 +1,83 @@
+# SPDX-FileCopyrightText: 2026 DB InfraGO AG
+# SPDX-License-Identifier: Apache-2.0
+# oss-readiness-auditor: rule source
+#
+# Rule pack 'eclipse'.
+# bundle_to_maven: Eclipse Orbit and other repackaged OSGi bundles that carry no Maven metadata, mapped to Maven
+# coordinates so that their version can be matched against OSV.
+
+about = 'Eclipse/OSGi/Tycho conventions: MANIFEST.MF, plugin.xml, feature.xml, .product, about.html, launch arguments, Orbit bundle names.'
+default = true
+
+# Public domains: hosts under them are not reported.
+public_hosts = [
+    'eclipse.org',
+    'eclipse.dev',
+    'eclipsecon.org',
+    'polarsys.org',
+    'eclipse-ee4j.github.io',
+    'jakarta.ee',
+    'osgi.org',
+    'obeo.fr',
+    'xtext.org',
+]
+
+[bundle_to_maven]
+"bcprov" = 'org.bouncycastle:bcprov-jdk18on'
+"bcpg" = 'org.bouncycastle:bcpg-jdk18on'
+"bcutil" = 'org.bouncycastle:bcutil-jdk18on'
+"com.h2database" = 'com.h2database:h2'
+"com.google.inject" = 'com.google.inject:guice'
+"com.sun.jna" = 'net.java.dev.jna:jna'
+"com.sun.jna.platform" = 'net.java.dev.jna:jna-platform'
+"ca.odell.glazedlists" = 'com.glazedlists:glazedlists'
+"org.apache.commons.jxpath" = 'commons-jxpath:commons-jxpath'
+"org.apache.lucene.core" = 'org.apache.lucene:lucene-core'
+"org.apache.lucene.analysis-common" = 'org.apache.lucene:lucene-analysis-common'
+"org.apache.lucene.analysis-smartcn" = 'org.apache.lucene:lucene-analysis-smartcn'
+"org.apache.xerces" = 'xerces:xercesImpl'
+"org.apache.xml.resolver" = 'xml-resolver:xml-resolver'
+"org.apache.xml.serializer" = 'xalan:serializer'
+"org.apache.xmlgraphics" = 'org.apache.xmlgraphics:xmlgraphics-commons'
+"org.aspectj.runtime" = 'org.aspectj:aspectjrt'
+"org.aspectj.weaver" = 'org.aspectj:aspectjweaver'
+"org.mortbay.jasper.apache-el" = 'org.mortbay.jasper:apache-el'
+"org.objectweb.asm" = 'org.ow2.asm:asm'
+"org.objectweb.asm.commons" = 'org.ow2.asm:asm-commons'
+"org.objectweb.asm.tree" = 'org.ow2.asm:asm-tree'
+"org.objectweb.asm.tree.analysis" = 'org.ow2.asm:asm-analysis'
+"org.objectweb.asm.util" = 'org.ow2.asm:asm-util'
+"org.tukaani.xz" = 'org.tukaani:xz'
+"org.postgresql.jdbc" = 'org.postgresql:postgresql'
+"checker-qual" = 'org.checkerframework:checker-qual'
+"org.aopalliance" = 'aopalliance:aopalliance'
+"com.google.guava" = 'com.google.guava:guava'
+"com.google.gson" = 'com.google.code.gson:gson'
+"com.ibm.icu" = 'com.ibm.icu:icu4j'
+"javax.inject" = 'javax.inject:javax.inject'
+"org.apache.commons.io" = 'commons-io:commons-io'
+"org.apache.commons.lang" = 'commons-lang:commons-lang'
+"org.apache.commons.lang3" = 'org.apache.commons:commons-lang3'
+"org.apache.commons.codec" = 'commons-codec:commons-codec'
+"org.apache.commons.compress" = 'org.apache.commons:commons-compress'
+"org.apache.commons.collections" = 'commons-collections:commons-collections'
+"org.apache.commons.collections4" = 'org.apache.commons:commons-collections4'
+"org.apache.commons.text" = 'org.apache.commons:commons-text'
+"org.apache.commons.logging" = 'commons-logging:commons-logging'
+"org.apache.commons.beanutils" = 'commons-beanutils:commons-beanutils'
+"org.apache.httpcomponents.httpclient" = 'org.apache.httpcomponents:httpclient'
+"org.apache.httpcomponents.httpcore" = 'org.apache.httpcomponents:httpcore'
+"org.apache.log4j" = 'log4j:log4j'
+"org.yaml.snakeyaml" = 'org.yaml:snakeyaml'
+"org.jsoup" = 'org.jsoup:jsoup'
+"org.jdom2" = 'org.jdom:jdom2'
+"org.antlr.runtime" = 'org.antlr:antlr-runtime'
+"org.apache.poi" = 'org.apache.poi:poi'
+"org.apache.xmlbeans" = 'org.apache.xmlbeans:xmlbeans'
+"org.apache.ant" = 'org.apache.ant:ant'
+"org.apache.velocity" = 'org.apache.velocity:velocity'
+"com.jcraft.jsch" = 'com.jcraft:jsch'
+"org.apache.sshd.core" = 'org.apache.sshd:sshd-core'
+"org.bouncycastle.bcprov" = 'org.bouncycastle:bcprov-jdk18on'
+"org.bouncycastle.bcpg" = 'org.bouncycastle:bcpg-jdk18on'
+"org.bouncycastle.bcpkix" = 'org.bouncycastle:bcpkix-jdk18on'

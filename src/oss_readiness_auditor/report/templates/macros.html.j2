@@ -1,0 +1,83 @@
+{# SPDX-FileCopyrightText: 2026 DB InfraGO AG #}
+{# SPDX-License-Identifier: Apache-2.0 #}
+{# oss-readiness-auditor: rule source #}
+{# Building blocks shared by the report sections. #}
+
+{% macro badge(status) %}
+<span class="badge st-{{ status }}">{{ icon(STATUS_META[status][1]) }}{{ STATUS_META[status][0] }}</span>
+{% endmacro %}
+
+{% macro loc(e) %}{{ e.file }}{% if e.line %}:{{ e.line }}{% endif %}{% endmacro %}
+
+{% macro table(t) %}
+{% set sev = t.get("severity") %}
+<div class="tbl"><div class="cap">{{ t.caption }}</div><table><thead><tr>
+{% for c in t.columns %}<th class="{{ 'num' if sev and loop.index0 else '' }}">{{ c }}</th>{% endfor %}
+</tr></thead><tbody>
+{% for r in t.rows %}
+<tr>
+{% for v in r %}
+{% if sev and loop.index0 %}
+<td class="num"><span class="bean {{ SEV_CLASS.get(t.columns[loop.index0], 'u') if v else 'z' }}">{{ v|fmt }}</span></td>
+{% else %}
+<td>{{ v|fmt }}</td>
+{% endif %}
+{% endfor %}
+</tr>
+{% endfor %}
+</tbody></table>
+{% if t.get("note") %}<div class="note">{{ t.note }}</div>{% endif %}
+</div>
+{% endmacro %}
+
+{% macro evidence(c) %}
+{% if c.evidence_total %}
+<details class="ev"><summary>{{ icon("files") }} Evidence ({{ c.evidence_total|num }})</summary><div class="body">
+<input type="search" class="filter" placeholder="Filter evidence…" aria-label="Filter evidence" hidden>
+<ul class="evl">
+{% for e in c.evidence %}
+<li data-k="{{ (e.file ~ ' ' ~ e.tag ~ ' ' ~ e.text)|lower }}"><span class="f">{{ loc(e) }}</span>
+{%- if e.tag %}<span class="tag">{{ e.tag }}</span>{% endif %}
+{%- if e.text %}<span class="x">{{ e.text }}</span>{% endif %}</li>
+{% endfor %}
+</ul>
+{% if c.evidence_total > c.evidence|length %}
+<p class="note">Showing the first {{ c.evidence|length|num }} of {{ c.evidence_total|num }}. Run with --json for the complete list.</p>
+{% endif %}
+</div></details>
+{% endif %}
+{% endmacro %}
+
+{% macro suppressed(c) %}
+{% if c.get("suppressed") %}
+<details class="ev"><summary>{{ icon("circle-check") }} Acknowledged in the configuration ({{ c.suppressed|length|num }}) – not counted</summary><div class="body"><ul class="evl">
+{% for e in c.suppressed[:MAX_EVIDENCE] %}
+<li><span class="f">{{ loc(e) }}</span>
+{%- if e.tag %}<span class="tag">{{ e.tag }}</span>{% endif %}
+{%- if e.text %}<span class="x">{{ e.text }}</span>{% endif %}
+<span class="x">Reason: {{ e.reason }}</span></li>
+{% endfor %}
+</ul></div></details>
+{% endif %}
+{% endmacro %}
+
+{% macro card(c) %}
+{% set wide = c.tables|select("wide_table")|list %}
+<article class="card st-{{ c.status }}{{ ' wide' if wide }}" id="c-{{ c.id }}">
+<div class="top"><span class="tile">{{ icon(c.icon) }}</span>{{ badge(c.status) }}</div>
+<h4>{{ c.title }}</h4><p class="why">{{ icon("octagon-alert") }}<span>{{ c.blocks }}</span></p>
+<div class="fig">{{ c.figure }}</div><div class="figl">{{ c.figure_label }}</div>
+<p class="finding">{{ c.finding }}</p>
+{% if c.get("resolve") and c.status != "clear" %}<p class="resolve"><b>To resolve:</b> {{ c.resolve }}</p>{% endif %}
+{% for t in c.tables %}{{ table(t) }}{% endfor %}
+{{ evidence(c) }}{{ suppressed(c) }}
+</article>
+{% endmacro %}
+
+{% macro chips(counts, checks) %}
+<span class="chips">
+{% for c in checks if counts.get(c.id) %}
+<span class="chip st-{{ c.status }}" title="{{ c.title }}: {{ counts[c.id]|num }}">{{ icon(c.icon) }}{{ counts[c.id]|num }}</span>
+{% endfor %}
+</span>
+{% endmacro %}

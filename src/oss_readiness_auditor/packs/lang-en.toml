@@ -1,0 +1,34 @@
+# SPDX-FileCopyrightText: 2026 DB InfraGO AG
+# SPDX-License-Identifier: Apache-2.0
+# oss-readiness-auditor: rule source
+#
+# Rule pack 'lang-en'.
+
+about = 'English wording of proprietary, ownership and confidentiality notices.'
+default = true
+locked = true  # cannot be disabled
+
+# Proprietary license clauses (regular expressions, case-insensitive; group 'holder' = owner).
+proprietary = [
+    '\b(?:is|are|remains?|being)\s+(?:the\s+)?(?:sole\s+|exclusive\s+)?(?:intellectual\s+)?property\s+of\s+(?:the\s+)?(?P<holder>(?-i:[A-Z\u00C0-\u00DE0-9])[^,.;:()\n]{1,79}?)\s*(?:[,.;:(]|\s+(?:and\s+)?(?:their|its)\s+use\b|\s+and\s+(?:is|are|may)\b)',
+    '\bproprietary\s+(?:and\s+confidential\s+)?(?:information|software|source\s+code|product|material)\s+of\s+(?:the\s+)?(?P<holder>(?-i:[A-Z\u00C0-\u00DE0-9])[^,.;:()\n]{1,79}?)\s*(?:[,.;:(]|$)',
+    '\b(?:confidential\s+and\s+proprietary|proprietary\s+and\s+confidential)\b',
+    '\bunauthori[sz]ed\s+(?:copying|use|reproduction|distribution|disclosure)\b[^.]{0,80}?\b(?:prohibited|forbidden)',
+    '\buse\s+is\s+subject\s+to\s+(?:a\s+)?(?:specific|separate|written|prior)\s+(?:license\s+)?agreements?\b',
+]
+
+# 'All rights reserved' wording; reported only when the header grants no license.
+all_rights = '\ball\s+rights\s+reserved\b'
+
+# Ownership and confidentiality wording.
+ownership = [
+    'company\s+confidential',
+    'strictly\s+confidential',
+    '\bconfidential\s*[-:]\s*do\s+not\s+(?:distribute|share)',
+    'for\s+internal\s+distribution\s+only',
+]
+
+# Wording reported outside code only (in code it describes API visibility).
+ownership_outside_code = [
+    'internal\s+use\s+only',
+]

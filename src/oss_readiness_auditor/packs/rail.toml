@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2026 DB InfraGO AG
+# SPDX-License-Identifier: Apache-2.0
+# oss-readiness-auditor: rule source
+#
+# Rule pack 'rail'.
+
+about = 'Railway domain: railML infrastructure data files.'
+default = false
+
+# Public domains: hosts under them are not reported.
+public_hosts = [
+    'railml.org',
+]
+
+[[data_files]]
+name = 'railML'
+extensions = ['.railml']
+root = 'railml'

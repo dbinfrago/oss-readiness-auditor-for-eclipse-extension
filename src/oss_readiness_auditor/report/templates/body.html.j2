@@ -1,0 +1,16 @@
+{# SPDX-FileCopyrightText: 2026 DB InfraGO AG #}
+{# SPDX-License-Identifier: Apache-2.0 #}
+{# oss-readiness-auditor: rule source #}
+{# The report body. Line breaks between tags are removed after rendering (report/html.py: compact). #}
+{% import "macros.html.j2" as m with context %}
+<header class="top"><div class="wrap"><span class="brand">{{ icon("search") }} {{ repo_name }} · OSS readiness</span>
+<nav><a href="#glance">At a glance</a><a href="#details">Details</a><a href="#hotspots">Hotspots</a><a href="#method">Method</a><a href="#run">Run</a></nav></div></header>
+<main class="wrap">
+{% include "hero.html.j2" %}
+{% include "glance.html.j2" %}
+{% include "details.html.j2" %}
+{% include "components.html.j2" %}
+{% include "method.html.j2" %}
+{% include "run.html.j2" %}
+</main>
+<footer>{{ tool.name }} {{ tool.version }} · generated offline · Apache-2.0 · icons: Lucide (ISC, MIT)</footer>

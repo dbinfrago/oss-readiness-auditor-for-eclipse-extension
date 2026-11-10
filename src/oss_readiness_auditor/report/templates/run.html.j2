@@ -1,0 +1,38 @@
+{# SPDX-FileCopyrightText: 2026 DB InfraGO AG #}
+{# SPDX-License-Identifier: Apache-2.0 #}
+{# oss-readiness-auditor: rule source #}
+{% set skipped = run.get("skipped_auditor_copies") or [] %}
+<section class="s" id="run"><h2>Run and reproducibility</h2><p class="intro">Same repository state + same tool version + same OSV dumps = same findings. The data fingerprint covers all findings.</p>
+<div class="kv">
+<div>Tool</div><div>{{ tool.name }} {{ tool.version }}</div>
+<div>Python / platform</div><div>{{ tool.python }} · {{ tool.platform }}</div>
+<div>Time</div><div>{{ run.time_utc }}</div>
+<div>Repository</div><div><code>{{ run.repository }}</code></div>
+<div>Git commit</div><div>
+{%- if run.git %}<code>{{ run.git.head }}</code>
+{%- if run.git.modified_tracked_files %} + {{ run.git.modified_tracked_files }} modified tracked files{% else %} (clean){% endif %}
+{%- else %}no git{% endif %}</div>
+<div>Files scanned</div><div>{{ run.files_scanned|num }}
+{%- if skipped %} (content rules skip {{ skipped|length }} cop{{ skipped|length|plural("y", "ies") }} of this tool: {{ skipped|join(", ") }}){% endif %}</div>
+<div>Configuration</div><div>
+{%- if cfg.file %}<code>{{ cfg.file }}</code><br>sha256 <code>{{ cfg.sha256 }}</code>
+{%- if cfg.get("text") %}<details><summary>Show the file</summary><pre class="cfg">{{ cfg.text }}</pre></details>{% endif %}
+{%- else %}none (defaults and inferred values){% endif %}</div>
+<div>Rule packs</div><div>{{ cfg.packs|join(", ") }}</div>
+<div>Own name prefixes of this repository</div><div>{{ cfg.own_prefixes|join(", ") or "none" }} <span class="w">({{ source_label(cfg.own_prefixes_source, "its bundle names") }})</span></div>
+<div>Product name patterns of this repository</div><div>{{ cfg.name_patterns|join(" | ") or "none" }} <span class="w">({{ source_label(cfg.name_patterns_source, ".product files and the root POM") }})</span></div>
+<div>Check settings</div><div>
+{%- for s in cfg.checks %}{{ s.check }}.{{ s.key }} = {{ s.value|join(", ") if s.value is iterable and s.value is not string else s.value }} <span class="w">({{ s.source }})</span>{{ "<br>"|safe if not loop.last }}{% else %}defaults{% endfor %}
+{%- if cfg.disabled_checks %}<br>disabled: {{ cfg.disabled_checks|join(", ") }}{% endif %}</div>
+<div>Paths not scanned</div><div>{{ cfg.exclude|join(", ") or "none" }}{% if run.get("files_excluded") %} ({{ run.files_excluded|num }} files){% endif %}</div>
+<div>Additional rules</div><div>
+{%- for k, v in cfg.rules.items() %}{{ k }}: {{ v|length }}{{ "; " if not loop.last }}{% else %}none{% endfor %}</div>
+<div>Acknowledged findings</div><div>{{ cfg.suppress|sum(attribute="used") }} findings by {{ cfg.suppress|length }} suppression rule(s)
+{%- if unused_suppressions %}; unused: {{ unused_suppressions|join(", ") }}{% endif %}</div>
+<div>Products inventoried</div><div>{{ run.products|join(", ") or "none" }}</div>
+<div>Third-party components</div><div>{{ run.components|num }}</div>
+<div>Vulnerability data</div><div>
+{%- for o in run.osv %}{{ o.file }} – {{ o.advisories|num }} advisories, newest {{ o.newest_entry[:10] }}, sha256 <code>{{ o.sha256 }}</code>{{ "<br>"|safe if not loop.last }}{% else %}not used{% endfor %}</div>
+<div>Data fingerprint (sha256)</div><div><code>{{ run.data_sha256 }}</code></div>
+</div>
+<div class="dark"><h2>{{ icon("clipboard-check") }} How to read this report</h2><p><b>Blocker found</b>: a rule matched something that must be resolved before publication (e.g. a proprietary license clause, a credential, a missing LICENSE). <b>Needs judgement</b>: candidates a person must assess (e.g. whether a host name is internal, whether data describes real infrastructure). <b>Clear</b>: no rule matched. <b>Not run</b>: input missing (e.g. no OSV dump given). <b>For information</b>: findings of a check whose level is set to "info" in the configuration – shown, not assessed.</p></div></section>

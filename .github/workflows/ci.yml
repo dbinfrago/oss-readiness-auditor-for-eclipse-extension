@@ -1,0 +1,51 @@
+# SPDX-FileCopyrightText: 2026 DB InfraGO AG
+# SPDX-License-Identifier: Apache-2.0
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - run: uv run --frozen python -m unittest discover -s tests
+      - name: REUSE, ruff
+        if: matrix.python == '3.13'
+        run: uvx pre-commit run --all-files --show-diff-on-failure
+
+  build:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.13"
+      - run: uv build
+      - name: Single-file build (tool and pinned dependencies)
+        run: uv run --frozen python scripts/build_pyz.py
+      - name: Audit this repository with the single file (fails on blockers)
+        run: |
+          python3 dist/oss-readiness-audit.pyz . -c examples/self-audit.toml -o self-audit.html --json
+          python3 -c "import json,sys; b=[c['id'] for c in json.load(open('self-audit.json'))['checks'] if c['status']=='blocker']; print('blockers:', b); sys.exit(bool(b))"
+      - run: cd dist && sha256sum * | tee SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: |
+            dist/
+            self-audit.html

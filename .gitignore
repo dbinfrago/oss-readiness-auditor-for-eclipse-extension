@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2026 DB InfraGO AG
+# SPDX-License-Identifier: Apache-2.0
+
+__pycache__/
+*.pyc
+.venv/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+.DS_Store
+# reports produced while trying the tool (in the repository root)
+/*.html
+/*.json
+.cache/

@@ -1,0 +1,52 @@
+# SPDX-FileCopyrightText: 2026 DB InfraGO AG
+# SPDX-License-Identifier: Apache-2.0
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "oss-readiness-auditor-for-eclipse-extension"
+version = "1.0.0"
+description = "Offline, deterministic open-source readiness audit of Eclipse/OSGi/Tycho code bases, with a static all-in-one HTML report."
+readme = "README.md"
+requires-python = ">=3.11"
+# The tool is Apache-2.0; the embedded icon shapes (Lucide) are ISC, a few of them MIT (Feather).
+license = "Apache-2.0 AND ISC AND MIT"
+license-files = ["LICENSE", "LICENSES/*.txt"]
+authors = [{ name = "DB InfraGO AG" }]
+# Only the HTML rendering uses Jinja; the analysis is standard library only.
+dependencies = ["jinja2>=3.1.6"]
+keywords = ["open source", "audit", "eclipse", "osgi", "tycho", "reuse", "license", "compliance", "osv"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Legal Industry",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Quality Assurance",
+]
+
+[project.urls]
+Repository = "https://github.com/dbinfrago/oss-readiness-auditor-for-eclipse-extension"
+
+[project.scripts]
+oss-readiness-audit = "oss_readiness_auditor.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/oss_readiness_auditor"]
+
+[tool.hatch.build.targets.sdist]
+only-include = ["src", "scripts", "docs", "uv.lock", "README.md", "CONTRIBUTING.md", "LICENSE",
+                "LICENSES", "pyproject.toml", "examples", "tests"]
+
+[tool.ruff]
+line-length = 120
+src = ["src"]
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "UP", "I"]
+# Long rule descriptions, regular expressions and the embedded CSS are kept on one line each for readability;
+# the formatter keeps code lines within the limit.
+ignore = ["E501"]

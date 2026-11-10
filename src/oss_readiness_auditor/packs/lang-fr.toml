@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: 2026 DB InfraGO AG
+# SPDX-License-Identifier: Apache-2.0
+# oss-readiness-auditor: rule source
+#
+# Rule pack 'lang-fr'.
+
+about = 'French wording of proprietary, ownership and confidentiality notices; French environment names (recette) as internal host hints.'
+default = true
+
+# Proprietary license clauses (regular expressions, case-insensitive; group 'holder' = owner).
+proprietary = [
+    '''\b(?:est|sont|reste|restent|demeure|demeurent)\s+(?:la\s+)?(?:pleine\s+)?(?:et\s+enti[èe]re\s+)?propri[ée]t[ée]\s+(?:exclusive\s+)?(?:du|de\s+la|des|de|d['’])\s*(?P<holder>(?-i:[A-Z\u00C0-\u00DE0-9])[^,.;:()\n]{1,59}?)\s*[,.;:(]''',
+    '\b(?:son|leur)\s+utilisation\s+est\s+soumise\s+[àa]\s+(?:un\s+)?accord',
+    '\btoute\s+(?:reproduction|diffusion|copie)\b[^.]{0,80}?\binterdite',
+]
+
+# 'All rights reserved' wording; reported only when the header grants no license.
+all_rights = '\btous\s+droits\s+r[ée]serv[ée]s\b'
+
+# Ownership and confidentiality wording.
+ownership = [
+    'propri[ée]t[ée]\s+exclusive',
+    'ne\s+peut\s+[êe]tre\s+(?:reproduit|communiqu|diffus)',
+    '\bconfidentiel(?:le)?\b',
+    'diffusion\s+restreinte',
+    'usage\s+interne',
+]
+
+# Host-name parts that make a host 'internal-looking'.
+internal_host_hints = [
+    'rec',
+    'recette',
+]

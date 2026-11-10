@@ -1,0 +1,12 @@
+{# SPDX-FileCopyrightText: 2026 DB InfraGO AG #}
+{# SPDX-License-Identifier: Apache-2.0 #}
+{# oss-readiness-auditor: rule source #}
+<section class="s" id="method"><h2>Method and rules</h2><p class="intro">The complete rule set of this run. A rule finds candidates; whether a candidate is a real problem is for the reviewer to decide – that is why many checks end in “needs judgement”. Files scanned: those tracked by git (or all files outside build folders if there is no git).</p>
+<div class="rules">
+{% for c in checks %}
+<details><summary>{{ icon(c.icon) }}{{ c.title }}</summary><dl>
+{% for r in c.rules %}<dt>{{ r.name }}</dt><dd>{{ r.detail }}</dd>
+{% endfor %}
+</dl></details>
+{% endfor %}
+</div></section>

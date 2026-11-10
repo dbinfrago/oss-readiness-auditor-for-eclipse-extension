@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2026 DB InfraGO AG
+# SPDX-License-Identifier: Apache-2.0
+#
+# Configuration for auditing this repository itself:
+#   oss-readiness-audit . -c examples/self-audit.toml -o self-audit.html
+# The tests generate a synthetic Eclipse extension with deliberate findings; their source text matches the rules.
+
+[[suppress]]
+check = "*"
+path = "tests/**"
+reason = "Synthetic test fixture with deliberate findings (fictitious names, hosts and addresses)."
+
+[rules]
+# Documentation sites linked from the README and CONTRIBUTING
+public_hosts = ["astral.sh", "lucide.dev", "feathericons.com", "developercertificate.org", "reuse.software", "openrailassociation.org"]

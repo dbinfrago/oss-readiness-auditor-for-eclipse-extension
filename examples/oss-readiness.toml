@@ -1,0 +1,58 @@
+# SPDX-FileCopyrightText: 2026 DB InfraGO AG
+# SPDX-License-Identifier: Apache-2.0
+#
+# Example configuration for a fictitious Eclipse extension "Acme Widget".
+# Every key is optional: without a configuration the auditor infers the project facts and uses the default packs.
+# Start your own with:  oss-readiness-audit /path/to/repo --spawn-config > oss-readiness.toml
+
+[project]
+own_prefixes = ["com.acme.widget"]            # default: inferred from the Bundle-SymbolicNames
+name_patterns = ['(?<![.\w])Acme\s+Widget(?![.\w])', '\bAWS\b']   # case-sensitive; default: from .product / root POM
+vendors = ["Acme Widget Project"]              # accepted Bundle-Vendor / provider-name values
+
+[scan]
+exclude = ["thirdparty/**", "**/node_modules/**"]   # not scanned at all
+products = ["../build/acme-widget/eclipse"]         # unpacked product, relative to this file
+osv_db = ["../osv/Maven-all.zip"]
+
+[packs]
+enable = ["openrail"]       # optional packs: "rail", "openrail"
+disable = ["lang-de"]       # drop a default pack that does not apply
+
+# Every check: enabled, level ("default" | "blocker" | "judgement" | "info") and its own settings
+[checks.reuse-dco]
+reuse = "blocker"           # every file must carry REUSE license information
+dco = "judgement"
+
+[checks.project-basics]
+required = ["LICENSE", "README", "SECURITY", "CODE_OF_CONDUCT", "MAINTAINERS"]
+
+[checks.openrail]
+target_stage = 1            # OpenRail stage applied for: 1 Onboarded, 2 Qualified
+
+[checks.name-logo]
+level = "info"              # trademarks already cleared: show occurrences, do not assess
+
+[checks.domain-data]
+enabled = false
+
+[rules]
+proprietary = ['\bAcme\s+internal\s+license\b']
+ownership = ['\bACME\s+RESTRICTED\b']
+public_hosts = ["acme-widget.org"]
+internal_host_hints = ["acmenet"]
+namespace_allow = ['^http://www\.omg\.org/spec/']
+bundle_to_maven = { "com.acme.repackaged.json" = "org.json:json" }
+
+[scenario]
+move_out = ["com.acme.widget.legacy*"]
+
+[[suppress]]
+check = "secrets"
+path = "**/src/test/resources/**"
+reason = "Test fixtures with throw-away credentials (reviewed 2026-11-04)."
+
+[[suppress]]
+check = "internal-hosts"
+text = "build\\.acme-widget\\.org"
+reason = "Public build server."

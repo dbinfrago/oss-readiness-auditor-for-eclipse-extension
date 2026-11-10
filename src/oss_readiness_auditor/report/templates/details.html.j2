@@ -1,0 +1,11 @@
+{# SPDX-FileCopyrightText: 2026 DB InfraGO AG #}
+{# SPDX-License-Identifier: Apache-2.0 #}
+{# oss-readiness-auditor: rule source #}
+<section class="s" id="details"><h2>Details</h2><p class="intro">Each check with its figures, breakdowns and the evidence (file and line) it is based on.</p>
+{% for g, cs in groups %}
+<div class="ghead">{{ icon(g.icon) }}{{ g.title }}</div>
+<div class="grid">
+{% for c in cs %}{{ m.card(c) }}{% endfor %}
+</div>
+{% endfor %}
+</section>
