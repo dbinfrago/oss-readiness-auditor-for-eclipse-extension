@@ -7,7 +7,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "oss-readiness-auditor-for-eclipse-extension"
-version = "1.0.0"
+version = "1.1.0"
 description = "Offline, deterministic open-source readiness audit of Eclipse/OSGi/Tycho code bases, with a static all-in-one HTML report."
 readme = "README.md"
 requires-python = ">=3.11"
