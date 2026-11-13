@@ -38,8 +38,11 @@ def main():
                 check=True,
                 stdout=fh,
             )
+        # One fixed target, whatever machine builds: the chosen wheels' metadata (WHEEL tags) is the same everywhere.
+        # Their compiled parts are removed below, so the target does not limit where the archive runs.
         subprocess.run(
-            ["uv", "pip", "install", "--quiet", "--target", stage, "--no-deps", "--require-hashes", "-r", reqs],
+            ["uv", "pip", "install", "--quiet", "--target", stage, "--no-deps", "--require-hashes", "-r", reqs]
+            + ["--python-platform", "x86_64-manylinux_2_28", "--python-version", "3.13"],
             check=True,
         )
         shutil.copytree(
