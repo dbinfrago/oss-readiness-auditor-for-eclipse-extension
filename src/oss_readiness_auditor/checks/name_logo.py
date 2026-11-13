@@ -130,8 +130,11 @@ def run(ctx, c):
                 where[kind][0] += 1
                 where[kind][1] += len(ms)
     files, occ = sum(v[0] for v in where.values()), sum(v[1] for v in where.values())
-    c.figure = str(len(shown))
-    c.figure_label = "logo and branding images" + (f" · name in {files:,} files" if rx else "")
+    # One decision per logo and one for the name (permission or rename/replace) – the figure counts decisions.
+    c.figure = str(len(shown) + (1 if occ else 0))
+    c.figure_label = f"decisions: {len(shown)} logo and branding images" + (
+        f" · the name (in {files:,} files)" if occ else ""
+    )
     c.finding = f"{len(shown)} logo and branding images to clear; " + (
         f"the product name appears {occ:,} times in {files:,} files ({where['product branding'][0]} of them product "
         "branding that users see)."

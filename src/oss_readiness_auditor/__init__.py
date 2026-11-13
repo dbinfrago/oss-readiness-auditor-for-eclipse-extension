@@ -27,4 +27,4 @@ TOOL_NAME = "OSS readiness auditor for Eclipse extensions"
 
 TOOL_ID = "oss-readiness-auditor-for-eclipse-extension"
 
-TOOL_VERSION = "1.0.0"
+TOOL_VERSION = "1.1.0"

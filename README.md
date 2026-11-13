@@ -11,8 +11,8 @@ any repository.
 
 The result is **one static HTML page**. It needs no external resources and no server, and it stays readable with
 JavaScript disabled. In this order:
-1. **At a glance:** one line per check – why it matters, the key figure, the result.
-2. **Details:** every check with its figures, what resolves it, and the evidence (file and line).
+1. **At a glance:** one line per check – the key figure and the result; checks that need action also say why they matter.
+2. **Details:** every check that needs action, with its figures, what resolves it, and the evidence (file and line). Clear checks get no card; they are named once, and their rules stay under "Method and rules". A clear check with acknowledged findings keeps its card.
 3. **Hotspots:** the units (bundles, modules) to start with – ranked by findings in blocker checks and by how many
    units depend on them.
 4. **Method and rules:** the complete rule set of the run.

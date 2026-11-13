@@ -111,16 +111,15 @@ def run(ctx, c):
             if c.add(f, ln, snippet(t, line_index(t), ln), "all rights reserved, no license"):
                 arr_only += 1
     total = sum(holders.values())
-    has_license = any(re.fullmatch(r"(?i)(LICEN[CS]E|COPYING)([.-]\w+)?", f) for f in repo.files)
-    c.figure = f"{total:,}"
-    c.figure_label = "files with a proprietary clause"
+    # The figure counts exactly what blocks; a missing LICENSE file is the project-basics check's finding.
+    c.figure = f"{total + arr_only:,}"
+    c.figure_label = "files with a proprietary clause or only 'All rights reserved'"
     c.finding = (
         f"{total:,} files carry a proprietary clause ({kinds['source header']:,} source headers, "
         f"{kinds['Eclipse metadata']} Eclipse metadata files, {kinds['code template']} code templates, "
         f"{kinds['documentation']} documentation files). "
         f"{arr_only:,} further files say 'All rights reserved' without granting any license. "
-        f"{granted:,} files grant a license in their header ({sum(spdx.values()):,} with an SPDX identifier). "
-        f"Root LICENSE file: {'present' if has_license else 'missing'}."
+        f"{granted:,} files grant a license in their header ({sum(spdx.values()):,} with an SPDX identifier)."
     )
     c.tables.append(
         {
@@ -137,7 +136,7 @@ def run(ctx, c):
                 "rows": [[k, n] for k, n in spdx.most_common()],
             }
         )
-    c.status = "blocker" if total or arr_only or not has_license else "clear"
+    c.status = "blocker" if total or arr_only else "clear"
     ctx.spdx_files = sum(spdx.values())
     ctx.holders = holders
     return c

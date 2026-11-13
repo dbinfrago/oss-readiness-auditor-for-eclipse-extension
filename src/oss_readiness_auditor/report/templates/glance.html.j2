@@ -1,12 +1,16 @@
 {# SPDX-FileCopyrightText: 2026 DB InfraGO AG #}
 {# SPDX-License-Identifier: Apache-2.0 #}
 {# oss-readiness-auditor: rule source #}
-<section class="s" id="glance"><h2>At a glance</h2><p class="intro">One line per check: why it matters for publication, the key figure and the result.</p>
+<section class="s" id="glance"><h2>At a glance</h2><p class="intro">One line per check: the key figure and the result; why it matters is shown where something needs action.</p>
 <div class="summary">
 {% for g, cs in groups %}
 <div><h3>{{ icon(g.icon) }}{{ g.title }}</h3>
 {% for c in cs %}
+{% if c is detailed %}
 <a class="row" href="#c-{{ c.id }}"><span class="tile st-{{ c.status }}">{{ icon(c.icon) }}</span><span class="grow"><span class="t">{{ c.title }}</span><br><span class="w">{{ c.blocks }}</span></span><span class="rfig">{{ c.figure }}</span>{{ m.badge(c.status) }}<span class="arrow">{{ icon("arrow-right") }}</span></a>
+{% else %}
+<a class="row quiet" href="#m-{{ c.id }}"><span class="tile st-{{ c.status }}">{{ icon(c.icon) }}</span><span class="grow"><span class="t">{{ c.title }}</span></span>{{ m.badge(c.status) }}</a>
+{% endif %}
 {% endfor %}
 </div>
 {% endfor %}

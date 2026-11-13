@@ -62,14 +62,14 @@
 {% endmacro %}
 
 {% macro card(c) %}
-{% set wide = c.tables|select("wide_table")|list %}
+{% set wide = c.tables|selectattr("rows")|select("wide_table")|list %}
 <article class="card st-{{ c.status }}{{ ' wide' if wide }}" id="c-{{ c.id }}">
 <div class="top"><span class="tile">{{ icon(c.icon) }}</span>{{ badge(c.status) }}</div>
 <h4>{{ c.title }}</h4><p class="why">{{ icon("octagon-alert") }}<span>{{ c.blocks }}</span></p>
 <div class="fig">{{ c.figure }}</div><div class="figl">{{ c.figure_label }}</div>
 <p class="finding">{{ c.finding }}</p>
 {% if c.get("resolve") and c.status != "clear" %}<p class="resolve"><b>To resolve:</b> {{ c.resolve }}</p>{% endif %}
-{% for t in c.tables %}{{ table(t) }}{% endfor %}
+{% for t in c.tables if t.rows %}{{ table(t) }}{% endfor %}
 {{ evidence(c) }}{{ suppressed(c) }}
 </article>
 {% endmacro %}

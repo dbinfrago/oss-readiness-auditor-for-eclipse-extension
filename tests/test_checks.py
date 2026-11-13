@@ -269,6 +269,64 @@ class OpenRailTest(unittest.TestCase):
         self.assertIn("Stage 2: REUSE compliant", " ".join(texts(c["openrail"], "not met")))
 
 
+CLEAN = {
+    "README.md": "# Gizmo\n\nSee https://pre-commit.com and https://www.conventionalcommits.org.\n",
+    "src/Main.java": "// SPDX-FileCopyrightText: 2026 Acme\n// SPDX-License-Identifier: Apache-2.0\npackage a;\nclass Main {}\n",
+}
+
+
+def zero_figure_alarms(checks):
+    """Checks that are red or amber while their headline figure says 0."""
+    return [c["id"] for c in checks.values() if c["status"] in ("blocker", "judgement") and c["figure"] == "0"]
+
+
+class NoNuisanceTest(unittest.TestCase):
+    """A check is only red or amber for its own findings, and its headline figure counts them."""
+
+    def checks(self, extra):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = os.path.join(tmp, "gizmo")
+            build(dict(CLEAN, **extra), root)
+            return run(root)[1]
+
+    def test_fixture_has_no_zero_figure_alarms(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = os.path.join(tmp, "acme-widget")
+            build(FIXTURE, root)
+            self.assertEqual(zero_figure_alarms(run(root, pack=["openrail"])[1]), [])
+
+    def test_reuse_license_texts_only(self):
+        c = self.checks({"LICENSES/Apache-2.0.txt": "Apache License\nVersion 2.0\n"})
+        self.assertEqual(c["license-notices"]["status"], "clear")
+        pb = c["project-basics"]
+        rows = {r[0]: r[1] for r in pb["tables"][0]["rows"]}
+        self.assertEqual(rows["LICENSE"], "detected in LICENSES/ (Apache-2.0); root LICENSE missing")
+        self.assertEqual(pb["status"], "judgement")
+        self.assertIn("GitHub advises", pb["finding"])
+        self.assertIn("LICENSES/Apache-2.0.txt", [e["file"] for e in pb["evidence"] if not e["issue"]])
+        self.assertEqual(files(pb, "root LICENSE missing"), ["(repository root)"])
+        self.assertEqual(c["internal-hosts"]["status"], "clear")  # tooling sites are public
+        self.assertEqual(zero_figure_alarms(c), [])
+
+    def test_root_license_and_reuse_texts(self):
+        lic = "Apache License\nVersion 2.0\n"
+        pb = self.checks({"LICENSE": lic, "LICENSES/Apache-2.0.txt": lic})["project-basics"]
+        self.assertEqual({r[0]: r[1] for r in pb["tables"][0]["rows"]}["LICENSE"], "yes")
+        self.assertEqual(files(pb, "root LICENSE missing"), [])
+        self.assertNotIn("GitHub advises", pb["finding"])
+
+    def test_no_license_at_all_blocks_once(self):
+        c = self.checks({})
+        self.assertEqual(c["license-notices"]["status"], "clear")  # nothing proprietary
+        self.assertEqual(c["project-basics"]["status"], "blocker")  # the missing LICENSE is reported here
+        self.assertEqual(zero_figure_alarms(c), [])
+
+    def test_public_hosts_to_decide_are_counted(self):
+        c = self.checks({"docs/x.md": "https://status.gizmo-partner.io/\n"})["internal-hosts"]
+        self.assertEqual(c["status"], "judgement")
+        self.assertEqual(c["figure"], "1")
+
+
 class WordingTest(unittest.TestCase):
     """The default language packs on header wordings seen in real code bases (owners anonymised)."""
 

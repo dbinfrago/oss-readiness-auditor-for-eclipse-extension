@@ -44,6 +44,9 @@ h2{font-size:1.6rem;margin:0;letter-spacing:-.01em;display:flex;align-items:cent
 .row .t{font-weight:600}.row .w{font-size:.875rem;color:var(--slate600)}
 .rfig{font-variant-numeric:tabular-nums;font-weight:700;min-width:4.5rem;text-align:right}
 .row .arrow{color:var(--slate300)}
+.row.quiet{padding:.35rem 1.25rem}.row.quiet .tile{width:1.6rem;height:1.6rem;font-size:.9rem}.row.quiet .t{font-weight:500;color:var(--slate600)}
+.note.quiet{display:flex;align-items:baseline;gap:.4rem;margin-top:2rem;color:var(--slate600)}
+.rules details:target{outline:2px solid var(--slate300);border-radius:.4rem}
 .grow{flex:1;min-width:0}
 .ghead{display:flex;align-items:center;gap:.5rem;font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--slate500);margin:2.5rem 0 1rem}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}

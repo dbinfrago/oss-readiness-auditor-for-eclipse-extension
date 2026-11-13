@@ -115,8 +115,8 @@ def openly_licensed(repo, ctx):
     lic, third = ctx.results.get("license-notices"), ctx.results.get("third-party")
     if lic is None:
         return PERSON, "the license check is disabled", None
-    if lic.status == "blocker" and lic.figure != "0":
-        return NOT_MET, f"{lic.figure} files with a proprietary clause (see the license check)", None
+    if lic.status == "blocker":
+        return NOT_MET, f"{lic.figure} {lic.figure_label} (see the license check)", None
     if third is not None and third.status == "blocker":
         return NOT_MET, "third-party components with a copyleft or restricted license (see the third-party check)", None
     return MET, "no proprietary clauses; no restricted third-party licenses found", None

@@ -118,8 +118,13 @@ def run(ctx, c):
         else:
             internal.discard(h)
     n_int = len(internal)
-    c.figure = str(n_int)
-    c.figure_label = f"internal-looking hosts (of {len(rows)} non-public hosts)"
+    # The figure counts what sets the status: internal-looking hosts if any (blocker), else hosts to decide.
+    if n_int:
+        c.figure = str(n_int)
+        c.figure_label = f"internal-looking hosts (of {len(rows)} non-public hosts)"
+    else:
+        c.figure = str(len(rows))
+        c.figure_label = "non-public hosts to decide (none internal-looking)"
     c.finding = (
         f"{len(rows)} host names outside the public allow-list, {n_int} of them internal-looking. "
         "Each needs a decision: remove, replace by configuration, or keep as a documented public endpoint."

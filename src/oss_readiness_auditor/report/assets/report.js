@@ -7,3 +7,9 @@ document.querySelectorAll("details.ev").forEach(function (d) {
     items.forEach(function (li) { li.hidden = q !== "" && li.getAttribute("data-k").indexOf(q) < 0; });
   });
 });
+function openTarget() {
+  var t = location.hash && document.getElementById(location.hash.slice(1));
+  if (t && t.tagName === "DETAILS") t.open = true;
+}
+window.addEventListener("hashchange", openTarget);
+openTarget();

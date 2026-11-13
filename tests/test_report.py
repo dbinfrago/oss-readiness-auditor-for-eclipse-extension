@@ -62,6 +62,34 @@ class StructureTest(unittest.TestCase):
             self.assertNotIn(gone, html)
         self.assertIn("Scenario: moving units out", html)
 
+    def test_clear_checks_get_no_card_and_links_resolve(self):
+        import re
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = os.path.join(tmp, "gizmo")
+            # REUSE-IgnoreStart
+            build(
+                {
+                    "LICENSE": "Apache License\nVersion 2.0\n",
+                    "README.md": "# Gizmo\n",
+                    "src/Main.java": "// SPDX-License-Identifier: Apache-2.0\npackage a;\nclass Main {}\n",
+                },
+                root,
+            )
+            # REUSE-IgnoreEnd
+            data, c = run(root)
+            html = A.render_html(data)
+        clear = [k for k, v in c.items() if v["status"] == "clear"]
+        self.assertIn("secrets", clear)
+        for k in clear:
+            self.assertNotIn(f'id="c-{k}"', html)  # no card in Details
+            self.assertIn(f'id="m-{k}"', html)  # its rules stay in Method
+        self.assertIn('id="c-project-basics"', html)  # expected files missing: needs judgement
+        self.assertIn("Not shown, because no rule matched", html)
+        ids = set(re.findall(r'id="([^"]+)"', html))
+        for target in re.findall(r'href="#([^"]+)"', html):
+            self.assertIn(target, ids, target)
+
 
 class SingleFileTest(unittest.TestCase):
     def test_pyz_runs_from_a_relative_path_with_dotdot(self):

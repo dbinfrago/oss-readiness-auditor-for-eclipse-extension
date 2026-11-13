@@ -92,6 +92,9 @@ def environment():
     env.filters["anchor"] = anchor
     env.filters["plural"] = lambda n, one="", many="s": one if n == 1 else many
     env.tests["wide_table"] = lambda t: bool(t.get("severity")) or len(t["columns"]) > 3
+    # A check gets a card in Details only if a reader has something to do or see there: not clear, or acknowledged
+    # findings (they must stay visible), or findings counted against units (the hotspot legend links to the card).
+    env.tests["detailed"] = lambda c: c["status"] != "clear" or bool(c.get("suppressed")) or bool(c["by_component"])
     env.globals.update(
         icon=icon,
         STATUS_META=STATUS_META,
